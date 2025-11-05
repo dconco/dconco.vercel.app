@@ -12,10 +12,15 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 	})
 })
 
+// Constants
+const SCROLL_THRESHOLD = 50
+const PARALLAX_SPEED = 0.5
+const TILT_SENSITIVITY = 20
+
 // Add scroll effect to navigation
 window.addEventListener('scroll', () => {
 	const nav = document.querySelector('nav')
-	if (window.scrollY > 50) {
+	if (window.scrollY > SCROLL_THRESHOLD) {
 		nav.style.background = 'rgba(255, 255, 255, 0.95)'
 		nav.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.08)'
 	} else {
@@ -47,18 +52,6 @@ document.querySelectorAll('.project-card, .skill-category, .ai-bot-card, .resume
 	observer.observe(el)
 })
 
-// Add parallax effect to hero background elements
-window.addEventListener('scroll', () => {
-	const scrolled = window.pageYOffset
-	const heroElements = document.querySelectorAll('.hero::before, .hero::after')
-	heroElements.forEach(el => {
-		if (el) {
-			const speed = 0.5
-			el.style.transform = `translateY(${scrolled * speed}px)`
-		}
-	})
-})
-
 // Add subtle mouse move effect on cards
 document.querySelectorAll('.project-card, .skill-category, .ai-bot-card, .resume-preview').forEach(card => {
 	card.addEventListener('mousemove', (e) => {
@@ -69,8 +62,8 @@ document.querySelectorAll('.project-card, .skill-category, .ai-bot-card, .resume
 		const centerX = rect.width / 2
 		const centerY = rect.height / 2
 		
-		const rotateX = (y - centerY) / 20
-		const rotateY = (centerX - x) / 20
+		const rotateX = (y - centerY) / TILT_SENSITIVITY
+		const rotateY = (centerX - x) / TILT_SENSITIVITY
 		
 		card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`
 	})
