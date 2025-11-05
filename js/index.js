@@ -12,30 +12,63 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 	})
 })
 
+// Constants
+const SCROLL_THRESHOLD = 50
+const PARALLAX_SPEED = 0.5
+const TILT_SENSITIVITY = 20
+
 // Add scroll effect to navigation
 window.addEventListener('scroll', () => {
 	const nav = document.querySelector('nav')
-	if (window.scrollY > 100) {
-		nav.style.background = 'rgba(15, 15, 35, 0.98)'
+	if (window.scrollY > SCROLL_THRESHOLD) {
+		nav.style.background = 'rgba(255, 255, 255, 0.95)'
+		nav.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.08)'
 	} else {
-		nav.style.background = 'rgba(15, 15, 35, 0.95)'
+		nav.style.background = 'rgba(255, 255, 255, 0.8)'
+		nav.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.03)'
 	}
 })
 
-// Animate elements on scroll
+// Enhanced scroll animations
 const observerOptions = {
-	threshold: 0.1,
-	rootMargin: '0px 0px -50px 0px',
+	threshold: 0.15,
+	rootMargin: '0px 0px -80px 0px',
 }
 
 const observer = new IntersectionObserver(entries => {
-	entries.forEach(entry => {
+	entries.forEach((entry, index) => {
 		if (entry.isIntersecting) {
-			entry.target.classList.add('animate-in')
+			setTimeout(() => {
+				entry.target.classList.add('animate-in')
+				entry.target.classList.add('revealed')
+			}, index * 100)
 		}
 	})
 }, observerOptions)
 
-document.querySelectorAll('.project-card, .skill-category, .ai-bot-card').forEach(el => {
+// Observe multiple elements with staggered animation
+document.querySelectorAll('.project-card, .skill-category, .ai-bot-card, .resume-preview').forEach((el, index) => {
+	el.classList.add('scroll-reveal')
 	observer.observe(el)
+})
+
+// Add subtle mouse move effect on cards
+document.querySelectorAll('.project-card, .skill-category, .ai-bot-card, .resume-preview').forEach(card => {
+	card.addEventListener('mousemove', (e) => {
+		const rect = card.getBoundingClientRect()
+		const x = e.clientX - rect.left
+		const y = e.clientY - rect.top
+		
+		const centerX = rect.width / 2
+		const centerY = rect.height / 2
+		
+		const rotateX = (y - centerY) / TILT_SENSITIVITY
+		const rotateY = (centerX - x) / TILT_SENSITIVITY
+		
+		card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`
+	})
+	
+	card.addEventListener('mouseleave', () => {
+		card.style.transform = ''
+	})
 })
