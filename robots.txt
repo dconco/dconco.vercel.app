@@ -6,6 +6,3 @@ Allow: /
 
 # Sitemap location
 Sitemap: https://dconco.vercel.app/sitemap.xml
-
-# Crawl delay (optional, helps prevent server overload)
-Crawl-delay: 1
